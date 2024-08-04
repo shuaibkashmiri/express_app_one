@@ -13,7 +13,7 @@ const signUpHandler = async (req, res) => {
     if (username !== "" && password !== "" && email !== "") {
       const findUser = await User.findOne({ email });
       if (findUser) {
-        res.json({ message: "user Already Registered" });
+        res.json({ message: "User Already Registered" });
       } else {
         const hashPass = await bcrypt.hash(password, 10);
         const newUser = await User.create({
@@ -28,7 +28,7 @@ const signUpHandler = async (req, res) => {
         }
       }
     } else {
-      res.json({ msg: "enter Credentials" });
+      res.json({ msg: "Enter All Credentials" });
     }
   } catch (error) {
     console.log("Something wrong with server");
@@ -67,4 +67,16 @@ const loginHandler = async (req, res) => {
   }
 };
 
-module.exports = { signUpHandler, loginHandler };
+const getUserDetails=async(req,res)=>{
+  try {
+    const {_id}=req.params;
+    if(_id){
+      const getUser = await User.findById(_id);
+      messageHandler(res,200,{msg:"User Fetched SucessFully", "userdetails": getUser})
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+module.exports = { signUpHandler, loginHandler ,getUserDetails};

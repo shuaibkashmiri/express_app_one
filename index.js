@@ -1,7 +1,7 @@
 const express = require("express");
 const cors=require("cors");
 const connectDb = require("./utils/connectDb");
-const {signUpHandler, loginHandler} = require("./controllers/userController");
+const {signUpHandler, loginHandler, getUserDetails} = require("./controllers/userController");
 const verifyUser = require("./controllers/userVerification");
 
 const {config} =require ("dotenv")
@@ -17,7 +17,10 @@ server.get('/',(req,res)=>{res.json({name:'Shoaib',email:'shoaib@gmail.com'})})
 server.post("/user/signUp", signUpHandler)
 server.post("/user/login", loginHandler)
 
-server.get("/token/verify/:token", verifyUser )
+server.get("/token/verify/:token", verifyUser)
+server.get("/user/userdetails/:_id", getUserDetails)
+
+
 
 server.listen(port,()=>{
     console.log(`Server is listening on port ${port} `);
