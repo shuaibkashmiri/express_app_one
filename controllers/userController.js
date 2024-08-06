@@ -79,4 +79,21 @@ const getUserDetails=async(req,res)=>{
   }
 }
 
-module.exports = { signUpHandler, loginHandler ,getUserDetails};
+
+const handleDelete=async (req,res)=>{
+  try {
+    const  {_id} =req.user;
+    console.log(_id)
+    const checkUser=await User.findById(_id);
+    if(checkUser){
+      await User.findByIdAndDelete(_id);
+      messageHandler(res,200,"User Deleted Sucessfully");
+    }else{
+      messageHandler(res,200,"User not found")
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+module.exports = { signUpHandler, loginHandler ,getUserDetails,handleDelete};
