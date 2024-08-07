@@ -82,7 +82,7 @@ const getUserDetails=async(req,res)=>{
 
 const handleDelete=async (req,res)=>{
   try {
-    const  {_id} =req.user;
+    const  _id =req.user;
     console.log(_id)
     const checkUser=await User.findById(_id);
     if(checkUser){

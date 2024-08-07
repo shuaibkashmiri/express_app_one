@@ -11,6 +11,9 @@ const verifyUser = require("./controllers/userVerification");
 
 const { config } = require("dotenv");
 const isAuthenticated = require("./middlewares/auth");
+const multmid =require("./middlewares/multer");    
+const { getAllposts, handleCreatePost } = require("./controllers/postContoller");
+
 config("/.env");
 const port = process.env.PORT;
 const server = express();
@@ -31,9 +34,16 @@ server.get("/user/userdetails/:_id", getUserDetails);
 server.post("/user/signUp", signUpHandler);
 server.post("/user/login", loginHandler);
 
+
 //delete routes
 
 server.delete("/user/delete/:token", isAuthenticated ,handleDelete);
+
+
+// api roustes for posts feeds
+
+server.post("/post/createPost/:token",isAuthenticated,multmid,handleCreatePost);
+server.get("/post/getAll/:token",isAuthenticated, getAllposts )
 
 server.listen(port, () => {
   console.log(`Server is listening on port ${port} `);
