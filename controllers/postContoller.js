@@ -48,7 +48,7 @@ const handleCreatePost=async(req,res)=>{
 
 const getAllposts = async(req,res)=>{
 try {
-    const posts=await Post.find().lean();
+    const posts=await Post.find()
     if(posts){
         res.json({message:"Posts Fetched Sucessfully",posts})
     }else{

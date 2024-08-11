@@ -43,7 +43,7 @@ server.delete("/user/delete/:token", isAuthenticated ,handleDelete);
 // api roustes for posts feeds
 
 server.post("/post/createPost/:token",isAuthenticated,multmid,handleCreatePost);
-server.get("/post/getAll/:token",isAuthenticated, getAllposts )
+server.get("/post/getAll", getAllposts )
 
 server.listen(port, () => {
   console.log(`Server is listening on port ${port} `);
