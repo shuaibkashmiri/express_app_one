@@ -9,11 +9,11 @@ const {
 } = require("./controllers/userController");
 const verifyUser = require("./controllers/userVerification");
 
-const { config } = require("dotenv");
+
 const isAuthenticated = require("./middlewares/auth");
 const multmid =require("./middlewares/multer");    
 const { getAllposts, handleCreatePost } = require("./controllers/postContoller");
-
+const { config } = require("dotenv");
 config("/.env");
 const port = process.env.PORT;
 const server = express();
@@ -25,7 +25,7 @@ server.use(express.json());
 
 //get routes
 server.get("/", (req, res) => {
-  res.json({ name: "Shoaib", email: "shoaib@gmail.com" });
+  res.json({ name: "Shoaib", email: "shoaib@gmail.com" ,status:"Server Running" });
 });
 server.get("/token/verify/:token", verifyUser);
 server.get("/user/userdetails/:_id", getUserDetails);

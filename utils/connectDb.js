@@ -1,8 +1,11 @@
 const mongoose =require('mongoose');
+const { config } = require("dotenv");
+config("/.env");
+const url =process.env.MONGO_URL
 
 const connectDb =async()=>{
     try {
-        await mongoose.connect('mongodb://localhost:27017/newDb')
+        await mongoose.connect(url)
         console.log('Database Connected!')
         
     } catch (error) {
