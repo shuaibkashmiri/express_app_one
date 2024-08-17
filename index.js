@@ -28,7 +28,7 @@ server.get("/", (req, res) => {
   res.json({ name: "Shoaib", email: "shoaib@gmail.com" ,status:"Server Running" });
 });
 server.get("/token/verify/:token", verifyUser);
-server.get("/user/userdetails/:token", getUserDetails);
+server.get("/user/userdetails/:_id", getUserDetails);
 
 //post routes
 server.post("/user/signUp", signUpHandler);
