@@ -1,10 +1,10 @@
 const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const { messageHandler } = require("../utils/utils");
-const jwt =require("jsonwebtoken");
-const {config} =require ("dotenv")
-config("/.env")
-const secretKey =process.env.SECRET_KEY;
+const jwt = require("jsonwebtoken");
+const { config } = require("dotenv");
+config("/.env");
+const secretKey = process.env.SECRET_KEY;
 
 const signUpHandler = async (req, res) => {
   try {
@@ -57,43 +57,80 @@ const loginHandler = async (req, res) => {
 
     const payload = existingUser._id;
 
-    const createToken = await jwt.sign({ _id: payload }, secretKey);
+    const token = await jwt.sign({ _id: payload }, secretKey);
 
-    if (createToken) {
-      res.json({ message: "user loggin success", token: createToken });
+    if (token) {
+      res.cookie("token", token);
+      res.status(200).json({ message: "user loggin success" });
     }
   } catch (error) {
     console.log(error);
   }
 };
 
-const getUserDetails=async(req,res)=>{
+const getUserDetails = async (req, res) => {
   try {
-    const {_id}=req.params;
-    if(_id){
+    const _id = req.user;
+    console.log(_id);
+    if (_id) {
       const getUser = await User.findById(_id);
-      messageHandler(res,200,{msg:"User Fetched SucessFully", "userdetails": getUser})
+      messageHandler(res, 200, {
+        msg: "User Fetched SucessFully",
+        userdetails: getUser,
+      });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
-
-const handleDelete=async (req,res)=>{
+const handleDelete = async (req, res) => {
   try {
-    const  _id =req.user;
-    console.log(_id)
-    const checkUser=await User.findById(_id);
-    if(checkUser){
+    const _id = req.user;
+    console.log(_id);
+    const checkUser = await User.findById(_id);
+    if (checkUser) {
       await User.findByIdAndDelete(_id);
-      messageHandler(res,200,"User Deleted Sucessfully");
-    }else{
-      messageHandler(res,200,"User not found")
+      messageHandler(res, 200, "User Deleted Sucessfully");
+    } else {
+      messageHandler(res, 200, "User not found");
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
-module.exports = { signUpHandler, loginHandler ,getUserDetails,handleDelete};
+const handleEdit = async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+    const _id = req.user;
+    if (_id === "" || !_id) {
+      messageHandler(res, 400, "no Id passed");
+    }
+    const findUser = await User.findById(_id);
+    if (!findUser) {
+      messageHandler(res, 404, "User Not Found");
+    }
+    const hashPass = await bcrypt.hash(password, 10);
+    const editUser = await User.findByIdAndUpdate({
+      username,
+      email,
+      password: hashPass,
+    });
+    if (editUser) {
+      messageHandler(res, 201, "User Updated Sucessfully");
+    } else {
+      messageHandler(res, 200, "Some Error");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  signUpHandler,
+  loginHandler,
+  getUserDetails,
+  handleDelete,
+  handleEdit,
+};
