@@ -42,7 +42,7 @@ server.get("/", (req, res) => {
   });
 });
 // Token Verify Route
-server.get("/token/verify/:token", verifyUser);
+server.get("/token/verify", verifyUser);
 //User Api Routes
 server.post("/user/signUp", signUpHandler);
 server.post("/user/login", loginHandler);

@@ -71,7 +71,6 @@ const loginHandler = async (req, res) => {
 const getUserDetails = async (req, res) => {
   try {
     const _id = req.user;
-    console.log(_id);
     if (_id) {
       const getUser = await User.findById(_id);
       messageHandler(res, 200, {
