@@ -21,7 +21,7 @@ const signUpHandler = async (req, res) => {
     const newUser=await User.create({
       username,email,password:hashPass
     })
-    if(createUser){
+    if(newUser){
       const baseUrl = "https://app-back-end-nm7b.onrender.com"
       const link = `${baseUrl}/verify/email/${newUser._id}`;
       const data = `Your account has been registered with Us ... kindly click on the below link    ${link} to actiavte your account  and confirm you Email`;
