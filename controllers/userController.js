@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const User = require("../model/userModel");
 const { messageHandler } = require("../utils/utils");
 const jwt = require("jsonwebtoken");
+const transporter = require("../utils/nodeMailer")
 const { config } = require("dotenv");
 config("/.env");
 const secretKey = process.env.SECRET_KEY;
@@ -9,27 +10,35 @@ const secretKey = process.env.SECRET_KEY;
 const signUpHandler = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-
-    if (username !== "" && password !== "" && email !== "") {
-      const findUser = await User.findOne({ email });
-      if (findUser) {
-        res.json({ message: "User Already Registered" });
-      } else {
-        const hashPass = await bcrypt.hash(password, 10);
-        const newUser = await User.create({
-          username,
-          email,
-          password: hashPass,
-        });
-        if (newUser) {
-          res.json({ message: "User Registered Sucessfully" });
-        } else {
-          res.json({ message: "Some error" });
-        }
-      }
-    } else {
-      res.json({ msg: "Enter All Credentials" });
+    if((!username||username==="")&&(!email||email ==="")&&(!password||password==="")){
+      return messageHandler(res,400,"All Credentials Required")
     }
+    const existingUser =await User.findOne({email});
+    if(existingUser){
+      return messageHandler(res,400,"User Already Registered");
+    }
+    const hashPass =await bcrypt.hash(password,10);
+    const newUser=await User.create({
+      username,email,password:hashPass
+    })
+    if(createUser){
+      const baseUrl = "https://adventure-outfits-nluepdyx5-shuaibkashmiris-projects.vercel.app/"
+      const link = `${baseUrl}/verify/email/${newUser._id}`;
+      const data = `Your account has been registered with Us ... kindly click on the below link    ${link} to actiavte your account  and confirm you Email`;
+
+     const mail =  await transporter.sendMail({
+        from: "advicetechkmr@gmail.com",
+        to: `${email}`,
+        subject: `Welecome ${fullname}`,
+        text: data,
+      });
+
+      if(newUser&&mail){
+          return messageHandler(res,201,"User Registered Sucessfully")
+      }
+
+    }
+
   } catch (error) {
     console.log("Something wrong with server");
   }
