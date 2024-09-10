@@ -29,7 +29,7 @@ const signUpHandler = async (req, res) => {
      const mail =  await transporter.sendMail({
         from: "advicetechkmr@gmail.com",
         to: `${email}`,
-        subject: `Welecome ${fullname}`,
+        subject: `Welecome ${username}`,
         text: data,
       });
 
