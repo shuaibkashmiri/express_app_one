@@ -22,7 +22,7 @@ const signUpHandler = async (req, res) => {
       username,email,password:hashPass
     })
     if(createUser){
-      const baseUrl = "https://adventure-outfits-nluepdyx5-shuaibkashmiris-projects.vercel.app/"
+      const baseUrl = "https://app-back-end-nm7b.onrender.com"
       const link = `${baseUrl}/verify/email/${newUser._id}`;
       const data = `Your account has been registered with Us ... kindly click on the below link    ${link} to actiavte your account  and confirm you Email`;
 
@@ -134,6 +134,25 @@ const handleEdit = async (req, res) => {
     console.log(error);
   }
 };
+
+
+//Verify User 
+
+const verifyEmail=async(req,res)=>{
+  try {
+    const _id=req.params;
+    const user=await User.findById(_id);
+    if(user){
+      await User.findByIdAndUpdate(_id,{
+        isEmailVerified:true
+      })
+      res.render("index",{title : "Adventure Outfits | Verify"})
+    }
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 module.exports = {
   signUpHandler,
