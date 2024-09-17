@@ -14,9 +14,9 @@ const verifyUser = require("./controllers/userVerification");
 const isAuthenticated = require("./middlewares/auth");
 const multmid = require("./middlewares/multer");
 const {
-  getAllposts,
-  handleCreatePost,
-} = require("./controllers/postContoller");
+  handleNewArrivals,
+  getNewArrivals,
+} = require("./controllers/productContoller");
 const { config } = require("dotenv");
 config("/.env");
 const port = process.env.PORT;
@@ -27,7 +27,7 @@ const server = express();
 
 //  MiddleWares
 server.use(cors({
-  origin: 'https://adventure-outfits-dpaw1ofsp-shuaibkashmiris-projects.vercel.app',  
+  origin: 'http://localhost:3000',  
   credentials: true  
 })); /* Middle ware  (used to monitor incoming and outgoing data)*/
 server.use(express.json());
@@ -51,10 +51,10 @@ server.get("/user/userdetails", isAuthenticated, getUserDetails);
 server.put("/user/edit", isAuthenticated, handleEdit);
 server.delete("/user/delete", isAuthenticated, handleDelete);
 
-// api roustes for posts feeds
+// api roustes for Products 
 
-server.post("/post/createPost", isAuthenticated, multmid, handleCreatePost);
-server.get("/post/getAll", isAuthenticated, getAllposts);
+server.post("/products/add", isAuthenticated, multmid, handleNewArrivals);
+server.get("/products/getAll",getNewArrivals);
 server.listen(port, () => {
   console.log(`Server is listening on port ${port} `);
 });
