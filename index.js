@@ -11,23 +11,26 @@ const {
 } = require("./controllers/userController");
 const verifyUser = require("./controllers/userVerification");
 
-const isAuthenticated = require("./middlewares/auth");
+const {isAuthenticated, isAdmin} = require("./middlewares/auth");
 const multmid = require("./middlewares/multer");
 const {
   handleNewArrivals,
   getNewArrivals,
+  handleAddProducts,
+  getProducts,
 } = require("./controllers/productContoller");
 const { config } = require("dotenv");
 config("/.env");
 const port = process.env.PORT;
-// const origin=process.env.ORIGIN;
+// const frontOrigin=process.env.ORIGIN;
 const server = express();
 
 
 
 //  MiddleWares
 server.use(cors({
-  origin: 'http://localhost:3000',  
+  // origin: 'http://localhost:3000',  
+  origin:"https://adventure-outfits-shuaibkashmiris-projects.vercel.app/",
   credentials: true  
 })); /* Middle ware  (used to monitor incoming and outgoing data)*/
 server.use(express.json());
@@ -53,8 +56,8 @@ server.delete("/user/delete", isAuthenticated, handleDelete);
 
 // api roustes for Products 
 
-server.post("/products/add", isAuthenticated, multmid, handleNewArrivals);
-server.get("/products/getAll",getNewArrivals);
+server.post("/products/add", isAuthenticated,isAdmin, multmid, handleAddProducts);
+server.get("/products/getAll",getProducts);
 server.listen(port, () => {
   console.log(`Server is listening on port ${port} `);
 });

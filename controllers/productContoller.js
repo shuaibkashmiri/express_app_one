@@ -1,5 +1,5 @@
 const { messageHandler } = require("../utils/utils");
-const NewArrival = require("../model/products/newArrivalModel");
+const Product = require("../model/products/ProductModel");
 const User = require("../model/userModel");
 const cloudinary = require("cloudinary").v2;
 const { config } = require("dotenv");
@@ -11,7 +11,7 @@ cloudinary.config({
   api_secret: process.env.API_SECRET,
 });
 
-const handleNewArrivals = async (req, res) => {
+const handleAddProducts = async (req, res) => {
   try {
     const _id = req.user;
     const user = await User.findById(_id);
@@ -20,10 +20,10 @@ const handleNewArrivals = async (req, res) => {
     }
 
 
-    const { title,description,price } = req.body;
+    const { title,description,price,catagory,gender,size} = req.body;
     const image = req.file.path;
 
-    if (title === ""  && !image && description==="" && price==="") {
+    if (title === ""  && !image && description==="" && price==="" && catagory && gender && size) {
       return messageHandler(res, 203, "All Fields Required");
     }
 
@@ -34,7 +34,7 @@ const handleNewArrivals = async (req, res) => {
 
     const imageUrl = upload.secure_url;
 
-    const newProduct = await NewArrival.create({ title, imageUrl, price,description });
+    const newProduct = await Product.create({ title, imageUrl, price,description,catagory,gender,size});
     if (newProduct) {
       return messageHandler(res, 201, "Product Added SucessFully");
     }
@@ -43,9 +43,9 @@ const handleNewArrivals = async (req, res) => {
   }
 };
 
-const getNewArrivals = async (req, res) => {
+const getProducts = async (req, res) => {
   try {
-    const newProducts = await NewArrival.find();
+    const newProducts = await Product.find();
     if (newProducts) {
       res.json({ message: "Products Fetched Sucessfully", newProducts });
     } else {
@@ -56,4 +56,4 @@ const getNewArrivals = async (req, res) => {
   }
 };
 
-module.exports = { handleNewArrivals, getNewArrivals };
+module.exports = { handleAddProducts, getProducts };

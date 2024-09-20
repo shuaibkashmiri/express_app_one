@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { messageHandler } = require("../utils/utils");
 const { config } = require("dotenv");
+const User = require("../model/userModel");
 config("/.env");
 
 const isAuthenticated = (req, res, next) => {
@@ -20,4 +21,19 @@ const isAuthenticated = (req, res, next) => {
   }
 };
 
-module.exports = isAuthenticated;
+const isAdmin = async(req,res,next)=>{
+  
+  try {
+    const id=req.user
+  const userEmail=process.env.ADMIN_EMAIL;
+    const findAdmin=await User.findById(id);
+  if(findAdmin.email !==userEmail){
+    return messageHandler(res,206,"UnAuthorised")
+  }
+   return next()
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
+module.exports = {isAuthenticated,isAdmin};
