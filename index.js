@@ -20,6 +20,7 @@ const {
   getProducts,
 } = require("./controllers/productContoller");
 const { config } = require("dotenv");
+const verifyAdmin = require("./controllers/verifyAdmin");
 config("/.env");
 const port = process.env.PORT;
 // const frontOrigin=process.env.ORIGIN;
@@ -30,7 +31,7 @@ const server = express();
 //  MiddleWares
 server.use(cors({
   // origin: 'http://localhost:3000',  
-  origin:"https://adventure-outfits-shuaibkashmiris-projects.vercel.app/",
+  origin:"https://adventure-outfits-shuaibkashmiris-projects.vercel.app",
   credentials: true  
 })); /* Middle ware  (used to monitor incoming and outgoing data)*/
 server.use(express.json());
@@ -53,6 +54,10 @@ server.post("/user/login", loginHandler);
 server.get("/user/userdetails", isAuthenticated, getUserDetails);
 server.put("/user/edit", isAuthenticated, handleEdit);
 server.delete("/user/delete", isAuthenticated, handleDelete);
+//Admin Routes
+// admin route for front-End Verification
+server.get("/user/isAdmin",isAuthenticated,verifyAdmin)
+
 
 // api roustes for Products 
 
@@ -61,4 +66,5 @@ server.get("/products/getAll",getProducts);
 server.listen(port, () => {
   console.log(`Server is listening on port ${port} `);
 });
+
 connectDb();
