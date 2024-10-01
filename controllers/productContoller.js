@@ -1,5 +1,5 @@
 const { messageHandler } = require("../utils/utils");
-const Product = require("../model/products/ProductModel");
+const Product = require("../model/ProductModel");
 const User = require("../model/userModel");
 const cloudinary = require("cloudinary").v2;
 const { config } = require("dotenv");
@@ -20,10 +20,10 @@ const handleAddProducts = async (req, res) => {
     }
 
 
-    const { title,description,price,catagory,gender,size} = req.body;
+    const { title,description,price,catagory,subCatagory,size} = req.body;
     const image = req.file.path;
 
-    if (title === ""  && !image && description==="" && price==="" && catagory && gender && size) {
+    if (title === ""  && !image && description==="" && price==="" && catagory && subCatagory && size) {
       return messageHandler(res, 203, "All Fields Required");
     }
 
@@ -34,7 +34,7 @@ const handleAddProducts = async (req, res) => {
 
     const imageUrl = upload.secure_url;
 
-    const newProduct = await Product.create({ title, imageUrl, price,description,catagory,gender,size});
+    const newProduct = await Product.create({ title, imageUrl, price,description,catagory,subCatagory,size});
     if (newProduct) {
       return messageHandler(res, 201, "Product Added SucessFully");
     }
