@@ -11,11 +11,11 @@ const signUpHandler = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     if((!username||username==="")&&(!email||email ==="")&&(!password||password==="")){
-      return messageHandler(res,400,"All Credentials Required")
+      return messageHandler(res,306,"All Credentials Required")
     }
     const existingUser =await User.findOne({email});
     if(existingUser){
-      return messageHandler(res,400,"User Already Registered");
+      return messageHandler(res,306,"User Already Registered");
     }
     const hashPass =await bcrypt.hash(password,10);
     const newUser=await User.create({

@@ -22,7 +22,7 @@ const {
 const { config } = require("dotenv");
 const verifyAdmin = require("./controllers/verifyAdmin");
 const {handleCatagory, handleSubCatagory} = require("./controllers/feature");
-const { addToCart } = require("./controllers/cartHandler");
+const { addToCart, getCart } = require("./controllers/cartHandler");
 config("/.env");
 const port = process.env.PORT;
 // const frontOrigin=process.env.ORIGIN;
@@ -79,6 +79,7 @@ server.get("/products/accessories",(req,res)=>handleSubCatagory(req,res,"Accesso
 // Cart Routes
 
 server.post("/products/addtocart/:productID",isAuthenticated,addToCart)
+server.get("/products/getcart",getCart)
 
 
 server.listen(port, () => {
