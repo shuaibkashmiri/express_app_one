@@ -10,16 +10,22 @@ const User = mongoose.model("User", {
   city: String,
   State: String,
   isEmailVerified: Boolean,
-  cartValue: { type: Number },
+  cartValue: { type : Number},
   cart: [
     {
-      productID: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
       quantity: { type: Number },
       price: { type: Number },
       size: { type: String },
       color: { type: String },
     },
   ],
+
+  orders: [
+    { 
+      type: mongoose.Schema.Types.ObjectId, ref: 'Order'  // Reference to Order model
+    }
+  ]
 });
 
 module.exports = User;

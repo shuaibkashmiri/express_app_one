@@ -14,15 +14,13 @@ const verifyUser = require("./controllers/userVerification");
 const {isAuthenticated, isAdmin} = require("./middlewares/auth");
 const multmid = require("./middlewares/multer");
 const {
-  handleNewArrivals,
-  getNewArrivals,
   handleAddProducts,
   getProducts,
 } = require("./controllers/productContoller");
 const { config } = require("dotenv");
 const verifyAdmin = require("./controllers/verifyAdmin");
 const {handleCatagory, handleSubCatagory} = require("./controllers/feature");
-const { addToCart, getCart } = require("./controllers/cartHandler");
+const { addToCart, getCart, emptyCart, removeFromCart } = require("./controllers/cartHandler");
 config("/.env");
 const port = process.env.PORT;
 // const frontOrigin=process.env.ORIGIN;
@@ -47,7 +45,7 @@ server.get("/", (req, res) => {
     status: "Server Running",
   });
 });
-// Token Verify Route
+// Token Verify Route for Frontend HOC
 server.get("/token/verify", verifyUser);
 //User Api Routes
 server.post("/user/signUp", signUpHandler);
@@ -78,8 +76,10 @@ server.get("/products/accessories",(req,res)=>handleSubCatagory(req,res,"Accesso
 
 // Cart Routes
 
-server.post("/products/addtocart/:productID",isAuthenticated,addToCart)
-server.get("/products/getcart",getCart)
+server.post("/products/addtocart/:productId",isAuthenticated,addToCart)
+server.get("/products/getcart",isAuthenticated,getCart)
+server.get("/products/removeItem/:productId" ,isAuthenticated , removeFromCart)
+server.get("/produts/emptycart" ,isAuthenticated , emptyCart)
 
 
 server.listen(port, () => {
